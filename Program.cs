@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace CSharpSnippetsCore
+﻿namespace CSharpSnippetsCore
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Testing.FakeItEasy.Wrapping.WrappingExamples();
         }
     }
 }
