@@ -10,30 +10,42 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace CSharpSnippetsCore.Compile
 {
-    // shameless copy from https://stackoverflow.com/a/37739636
     public class CompilerExample
     {
         public static void Run()
         {
-            string code = 
-@"using System;
-
-namespace User
-{
-    public static class MyClass
-    {
-        public static double AddDoubles(double a, double b)
-        {
-            return a + b;
+            var result = ExecuteDoubleExpression("2 * 3.1415 / 17");
+            Console.WriteLine("result: " + result);
         }
-    }
-}";
-            var syntaxTree = CSharpSyntaxTree.ParseText(code);
 
-            var references = new MetadataReference[]
-            {
-                MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location),
-            }; 
+        private static double ExecuteDoubleExpression(string expr)
+        {
+            string code = 
+                @"using System;
+
+                namespace User
+                {
+                    public static class ExpressionExecutor
+                    {
+                        public static double ExecuteDouble()
+                        {
+                            return __DOUBLE__EXPR__;
+                        }
+                    }
+                }".Replace("__DOUBLE__EXPR__", expr);
+
+            var assembly = CompileAssembly(code, 
+                MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location));
+
+            var executor = assembly.GetType("User.ExpressionExecutor");
+            var executeDouble = executor.GetMethod("ExecuteDouble");
+
+            return (double) executeDouble.Invoke(null, null);
+        }
+
+        private static Assembly CompileAssembly(string code, params MetadataReference[] references)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
 
             var compilation = CSharpCompilation.Create("Function.dll",
                 syntaxTrees: new[] { syntaxTree },
@@ -56,22 +68,13 @@ namespace User
                     {
                         message.AppendFormat("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
                     }
-
                     throw new InvalidOperationException("compilation error: " + message.ToString());
                 }
                 else
                 {
                     ms.Seek(0, SeekOrigin.Begin);
-
                     var context = AssemblyLoadContext.Default;
-                    var assembly = context.LoadFromStream(ms);
-
-                    var compiledClass = assembly.GetType("User.MyClass");
-                    var compiledMethod = compiledClass.GetMethod("AddDoubles");
-
-                    var methodResult = compiledMethod.Invoke(null, new object[] {1, 2});
-
-                    Console.WriteLine("result: " + methodResult);
+                    return context.LoadFromStream(ms);
                 }
             }
         }
