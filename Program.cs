@@ -4,7 +4,8 @@
     {
         static void Main(string[] args)
         {
-            Testing.FakeItEasy.Wrapping.WrappingExamples();
+            // Testing.FakeItEasy.Wrapping.WrappingExamples();
+            Compile.CompilerExample.Run();
         }
     }
 }
