@@ -14,13 +14,15 @@ namespace CSharpSnippetsCore.Compile
     {
         public static void Run()
         {
-            var result = ExecuteDoubleExpression("2 * 3.1415 / 17");
-            Console.WriteLine("result: " + result);
+            Console.WriteLine("Runtime compilation example");
+            var expr = "2 * 3.1415 / 17";
+            var result = ExecuteDoubleExpression(expr);
+            Console.WriteLine($"{expr} = {result}");
         }
 
         private static double ExecuteDoubleExpression(string expr)
         {
-            string code = 
+            string code =
                 @"using System;
 
                 namespace User
@@ -34,7 +36,7 @@ namespace CSharpSnippetsCore.Compile
                     }
                 }".Replace("__DOUBLE__EXPR__", expr);
 
-            var assembly = CompileAssembly(code, 
+            var assembly = CompileAssembly(code,
                 MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location));
 
             var executor = assembly.GetType("User.ExpressionExecutor");
