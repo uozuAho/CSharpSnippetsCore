@@ -5,7 +5,8 @@
         static void Main(string[] args)
         {
             // Testing.FakeItEasy.Wrapping.WrappingExamples();
-            Compile.CompilerExample.Run();
+            // Compile.CompilerExample.Run();
+            Profiling.ThingToProfile.Run();
         }
     }
 }
