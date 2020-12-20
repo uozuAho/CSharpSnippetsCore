@@ -1,7 +1,7 @@
 using System;
 using FakeItEasy;
 
-namespace CSharpSnippetsCore.Testing.FakeItEasy
+namespace Blah.Testing.FakeItEasy
 {
     public interface IThingDoer
     {

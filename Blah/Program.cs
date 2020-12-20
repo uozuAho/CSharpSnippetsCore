@@ -1,4 +1,4 @@
-﻿namespace CSharpSnippetsCore
+﻿namespace Blah
 {
     class Program
     {
