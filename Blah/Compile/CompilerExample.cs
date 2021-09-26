@@ -7,16 +7,16 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace Blah.Compile
+namespace Snippets.Console.Compile
 {
     public class CompilerExample
     {
         public static void Run()
         {
-            Console.WriteLine("Runtime compilation example");
+            System.Console.WriteLine("Runtime compilation example");
             var expr = "2 * 3.1415 / 17";
             var result = ExecuteDoubleExpression(expr);
-            Console.WriteLine($"{expr} = {result}");
+            System.Console.WriteLine($"{expr} = {result}");
         }
 
         private static double ExecuteDoubleExpression(string expr)

@@ -1,4 +1,4 @@
-﻿namespace Blah
+namespace Snippets.Console
 {
     class Program
     {
