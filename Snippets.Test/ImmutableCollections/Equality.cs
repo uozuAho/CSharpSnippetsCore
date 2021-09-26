@@ -54,6 +54,17 @@ namespace Snippets.Test.ImmutableCollections
             Assert.AreEqual(list, copy);
             Assert.AreNotSame(list[0], copy[0]);
         }
+
+        [Test]
+        public void Copied_list_record_type_items_are_not_cloned()
+        {
+            var myRef = new ExampleRecordType();
+            var list = ImmutableList.Create(myRef);
+            var copy = ImmutableList.Create(list.ToArray());
+
+            Assert.AreEqual(list, copy);
+            Assert.AreSame(list[0], copy[0]);
+        }
     }
 
     struct ExampleValueType
@@ -61,6 +72,10 @@ namespace Snippets.Test.ImmutableCollections
     }
 
     class ExampleReferenceType
+    {
+    }
+
+    record ExampleRecordType
     {
     }
 }
