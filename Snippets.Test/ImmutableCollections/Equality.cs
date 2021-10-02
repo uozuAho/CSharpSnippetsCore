@@ -57,6 +57,19 @@ namespace Snippets.Test.ImmutableCollections
         }
 
         [Test]
+        public void Copied_list_value_type_are_equal()
+        {
+            var myRef = new ExampleValueType();
+            var list = ImmutableList.Create(myRef);
+            var copy = ImmutableList.Create(list.ToArray());
+
+            Assert.IsFalse(list == copy);
+            Assert.IsTrue(list.SequenceEqual(copy));
+            Assert.AreEqual(list, copy);
+            Assert.AreNotSame(list[0], copy[0]);
+        }
+
+        [Test]
         public void Copied_list_record_type_items_are_not_cloned()
         {
             var myRef = new ExampleRecordType();
