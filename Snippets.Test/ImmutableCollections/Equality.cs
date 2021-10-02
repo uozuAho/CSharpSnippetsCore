@@ -21,11 +21,12 @@ namespace Snippets.Test.ImmutableCollections
             var list = ImmutableList.Create(1, 2, 3);
             var copy = ImmutableList.Create(list.ToArray());
 
+            Assert.IsFalse(list == copy);
             Assert.AreNotSame(list, copy);
         }
 
         [Test]
-        public void Copied_list_is_equal()
+        public void Copied_list_is_equivalent()
         {
             var list = ImmutableList.Create(1, 2, 3);
             var copy = ImmutableList.Create(list.ToArray());
