@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -22,9 +23,17 @@ namespace Snippets.Test.MultipleDispatch
         private const int Greater = 1;
         private const int Unmatched = 2;
 
-        public static int Compare(ICommand a, ICommand b, int _ = 0) => Compare((dynamic)a, (dynamic)b);
+        public static int Compare(ICommand a, ICommand b, int _ = 0)
+        {
+            var result = Compare((dynamic)a, (dynamic)b);
+            if (result != Unmatched) return result;
+            result = Compare((dynamic)b, (dynamic)a);
+            if (result != Unmatched) return result;
 
-        // private static int Compare(ICommand a, ICommand b) => Same;
+            throw new ArgumentException("Undefined comparison");
+        }
+
+        private static int Compare(ICommand a, ICommand b) => Unmatched;
         private static int Compare<T>(T a, T b) where T : ICommand => Same;
         private static int Compare(AsdfCommand a, StuffCommand b) => Greater;
     }
@@ -60,10 +69,10 @@ namespace Snippets.Test.MultipleDispatch
             Assert.That(new AsdfCommand(), Is.GreaterThan(new StuffCommand()).Using(_comparer));
         }
 
-        // [Test]
-        // public void Stuff_is_less_than_asdf()
-        // {
-        //     Assert.That(new StuffCommand(), Is.GreaterThan(new AsdfCommand()).Using(_comparer));
-        // }
+        [Test]
+        public void Stuff_is_less_than_asdf()
+        {
+            Assert.That(new StuffCommand(), Is.GreaterThan(new AsdfCommand()).Using(_comparer));
+        }
     }
 }
