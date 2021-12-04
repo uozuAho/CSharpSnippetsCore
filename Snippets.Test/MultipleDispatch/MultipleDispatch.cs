@@ -23,9 +23,9 @@ namespace Snippets.Test.MultipleDispatch
         private const int Greater = 1;
         private const int Unmatched = 2;
 
-        public int Compare(IThing x, IThing y)
+        public int Compare(IThing a, IThing b)
         {
-            return CompareMulti(x, y, 0);
+            return CompareMulti(a, b, 0);
         }
 
         private static int CompareMulti(IThing a, IThing b, int _)
@@ -44,14 +44,36 @@ namespace Snippets.Test.MultipleDispatch
         
     }
 
+    internal class SingleDispatchComparer : IComparer<IThing>
+    {
+        private const int Less = -1;
+        private const int Same = 0;
+        private const int Greater = 1;
+        private const int Unmatched = 2;
+
+        public int Compare(IThing x, IThing y)
+        {
+            return CompareSingle(x, y);
+        }
+
+        private static int CompareSingle<T>(T a, T b) where T : IThing => Same;
+        private static int CompareSingle(BigThing a, SmallThing b) => Less;
+    }
+
+    [TestFixture("single")]
+    [TestFixture("multi")]
     internal class ComparerTests
     {
-        private MultiDispatchComparer _comparer;
+        private IComparer<IThing> _comparer;
 
-        [SetUp]
-        public void Setup()
+        public ComparerTests(string comparerType)
         {
-            _comparer = new MultiDispatchComparer();
+            _comparer = comparerType switch
+            {
+                "single" => new SingleDispatchComparer(),
+                "multi" => new MultiDispatchComparer(),
+                _ => throw new ArgumentException()
+            };
         }
 
         [Test]
