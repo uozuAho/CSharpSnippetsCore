@@ -4,21 +4,10 @@ using NUnit.Framework;
 
 namespace Snippets.Test.MultipleDispatch
 {
-    interface IThing
-    {
-    }
-
-    internal class SmallThing : IThing
-    {
-    }
-
-    internal class MediumThing : IThing
-    {
-    }
-
-    internal class BigThing : IThing
-    {
-    }
+    interface IThing { }
+    internal class SmallThing : IThing { }
+    internal class MediumThing : IThing { }
+    internal class BigThing : IThing { }
 
     internal class MultiDispatchComparer : IComparer<IThing>
     {
