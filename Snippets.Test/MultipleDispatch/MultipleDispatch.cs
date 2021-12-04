@@ -55,14 +55,14 @@ namespace Snippets.Test.MultipleDispatch
         }
 
         [Test]
-        public void Same_commands_are_equal()
+        public void Same_things_are_equal()
         {
             Assert.That(new SmallThing(), Is.EqualTo(new SmallThing()).Using(_comparer));
             Assert.That(new BigThing(), Is.EqualTo(new BigThing()).Using(_comparer));
         }
 
         [Test]
-        public void Asdf_is_greater_than_stuff()
+        public void Big_is_greater_than_small()
         {
             Assert.That(new BigThing(), Is.GreaterThan(new SmallThing()).Using(_comparer));
         }
@@ -70,7 +70,7 @@ namespace Snippets.Test.MultipleDispatch
         [Test]
         public void Stuff_is_less_than_asdf()
         {
-            Assert.That(new SmallThing(), Is.GreaterThan(new BigThing()).Using(_comparer));
+            Assert.That(new SmallThing(), Is.LessThan(new BigThing()).Using(_comparer));
         }
     }
 }
