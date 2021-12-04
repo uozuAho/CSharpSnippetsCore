@@ -4,31 +4,31 @@ using NUnit.Framework;
 
 namespace Snippets.Test.MultipleDispatch
 {
-    interface ICommand
+    interface IThing
     {
     }
 
-    internal class SmallCommand : ICommand
+    internal class SmallThing : IThing
     {
     }
 
-    internal class BigCommand : ICommand
+    internal class BigThing : IThing
     {
     }
 
-    internal class MultiDispatchCommandComparer : IComparer<ICommand>
+    internal class MultiDispatchComparer : IComparer<IThing>
     {
         private const int Less = -1;
         private const int Same = 0;
         private const int Greater = 1;
         private const int Unmatched = 2;
 
-        public int Compare(ICommand x, ICommand y)
+        public int Compare(IThing x, IThing y)
         {
             return CompareMulti(x, y, 0);
         }
 
-        private static int CompareMulti(ICommand a, ICommand b, int _ = 0)
+        private static int CompareMulti(IThing a, IThing b, int _)
         {
             var result = CompareMulti((dynamic)a, (dynamic)b);
             if (result != Unmatched) return result;
@@ -38,39 +38,39 @@ namespace Snippets.Test.MultipleDispatch
             throw new ArgumentException("Undefined comparison");
         }
 
-        private static int CompareMulti(ICommand a, ICommand b) => Unmatched;
-        private static int CompareMulti<T>(T a, T b) where T : ICommand => Same;
-        private static int CompareMulti(BigCommand a, SmallCommand b) => Greater;
+        private static int CompareMulti(IThing a, IThing b) => Unmatched;
+        private static int CompareMulti<T>(T a, T b) where T : IThing => Same;
+        private static int CompareMulti(BigThing a, SmallThing b) => Greater;
         
     }
 
     internal class ComparerTests
     {
-        private MultiDispatchCommandComparer _comparer;
+        private MultiDispatchComparer _comparer;
 
         [SetUp]
         public void Setup()
         {
-            _comparer = new MultiDispatchCommandComparer();
+            _comparer = new MultiDispatchComparer();
         }
 
         [Test]
         public void Same_commands_are_equal()
         {
-            Assert.That(new SmallCommand(), Is.EqualTo(new SmallCommand()).Using(_comparer));
-            Assert.That(new BigCommand(), Is.EqualTo(new BigCommand()).Using(_comparer));
+            Assert.That(new SmallThing(), Is.EqualTo(new SmallThing()).Using(_comparer));
+            Assert.That(new BigThing(), Is.EqualTo(new BigThing()).Using(_comparer));
         }
 
         [Test]
         public void Asdf_is_greater_than_stuff()
         {
-            Assert.That(new BigCommand(), Is.GreaterThan(new SmallCommand()).Using(_comparer));
+            Assert.That(new BigThing(), Is.GreaterThan(new SmallThing()).Using(_comparer));
         }
 
         [Test]
         public void Stuff_is_less_than_asdf()
         {
-            Assert.That(new SmallCommand(), Is.GreaterThan(new BigCommand()).Using(_comparer));
+            Assert.That(new SmallThing(), Is.GreaterThan(new BigThing()).Using(_comparer));
         }
     }
 }
