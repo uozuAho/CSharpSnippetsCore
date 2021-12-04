@@ -12,6 +12,10 @@ namespace Snippets.Test.MultipleDispatch
     {
     }
 
+    internal class MediumThing : IThing
+    {
+    }
+
     internal class BigThing : IThing
     {
     }
@@ -40,8 +44,9 @@ namespace Snippets.Test.MultipleDispatch
 
         private static int CompareMulti(IThing a, IThing b) => Unmatched;
         private static int CompareMulti<T>(T a, T b) where T : IThing => Same;
-        private static int CompareMulti(BigThing a, SmallThing b) => Greater;
-        
+        private static int CompareMulti(SmallThing a, MediumThing b) => Less;
+        private static int CompareMulti(SmallThing a, BigThing b) => Less;
+        private static int CompareMulti(MediumThing a, BigThing b) => Less;
     }
 
     internal class SingleDispatchComparer : IComparer<IThing>
@@ -49,21 +54,26 @@ namespace Snippets.Test.MultipleDispatch
         private const int Less = -1;
         private const int Same = 0;
         private const int Greater = 1;
-        private const int Unmatched = 2;
 
         public int Compare(IThing x, IThing y)
         {
             return x switch
             {
+                SmallThing => y switch
+                {
+                    SmallThing => Same,
+                    _ => Less
+                },
+                MediumThing => y switch
+                {
+                    SmallThing => Greater,
+                    BigThing => Less,
+                    _ => Same
+                },
                 BigThing => y switch
                 {
                     BigThing => Same,
-                    SmallThing => Greater,
-                },
-                SmallThing => y switch
-                {
-                    BigThing => Less,
-                    SmallThing => Same
+                    _ => Greater,
                 },
             };
         }
@@ -76,7 +86,7 @@ namespace Snippets.Test.MultipleDispatch
     [TestFixture("multi")]
     internal class ComparerTests
     {
-        private IComparer<IThing> _comparer;
+        private readonly IComparer<IThing> _comparer;
 
         public ComparerTests(string comparerType)
         {
@@ -92,6 +102,7 @@ namespace Snippets.Test.MultipleDispatch
         public void Same_things_are_equal()
         {
             Assert.That(new SmallThing(), Is.EqualTo(new SmallThing()).Using(_comparer));
+            Assert.That(new MediumThing(), Is.EqualTo(new MediumThing()).Using(_comparer));
             Assert.That(new BigThing(), Is.EqualTo(new BigThing()).Using(_comparer));
         }
 
@@ -105,6 +116,12 @@ namespace Snippets.Test.MultipleDispatch
         public void Small_is_less_than_big()
         {
             Assert.That(new SmallThing(), Is.LessThan(new BigThing()).Using(_comparer));
+        }
+
+        [Test]
+        public void Small_is_less_than_medium()
+        {
+            Assert.That(new SmallThing(), Is.LessThan(new MediumThing()).Using(_comparer));
         }
     }
 }
