@@ -33,7 +33,7 @@ namespace Snippets.Test.MultipleDispatch
             var result = CompareMulti((dynamic)a, (dynamic)b);
             if (result != Unmatched) return result;
             result = CompareMulti((dynamic)b, (dynamic)a);
-            if (result != Unmatched) return result;
+            if (result != Unmatched) return -result;
 
             throw new ArgumentException("Undefined comparison");
         }
@@ -68,7 +68,7 @@ namespace Snippets.Test.MultipleDispatch
         }
 
         [Test]
-        public void Stuff_is_less_than_asdf()
+        public void Small_is_less_than_big()
         {
             Assert.That(new SmallThing(), Is.LessThan(new BigThing()).Using(_comparer));
         }
