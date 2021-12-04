@@ -33,8 +33,7 @@ namespace Snippets.Test.MultipleDispatch
 
         private static int CompareMulti(IThing a, IThing b) => Unmatched;
         private static int CompareMulti<T>(T a, T b) where T : IThing => Same;
-        private static int CompareMulti(SmallThing a, MediumThing b) => Less;
-        private static int CompareMulti(SmallThing a, BigThing b) => Less;
+        private static int CompareMulti(SmallThing a, IThing b) => Less;
         private static int CompareMulti(MediumThing a, BigThing b) => Less;
     }
 
