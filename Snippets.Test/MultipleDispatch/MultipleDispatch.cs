@@ -53,11 +53,23 @@ namespace Snippets.Test.MultipleDispatch
 
         public int Compare(IThing x, IThing y)
         {
-            return CompareSingle(x, y);
+            return x switch
+            {
+                BigThing => y switch
+                {
+                    BigThing => Same,
+                    SmallThing => Greater,
+                },
+                SmallThing => y switch
+                {
+                    BigThing => Less,
+                    SmallThing => Same
+                },
+            };
         }
 
-        private static int CompareSingle<T>(T a, T b) where T : IThing => Same;
-        private static int CompareSingle(BigThing a, SmallThing b) => Less;
+        // can't do this, as it 'steals' matches from more specific types
+        // private static int CompareSingle<T>(T a, T b) where T : IThing => Same;
     }
 
     [TestFixture("single")]
